@@ -6,10 +6,14 @@ WORKDIR /var/task
 
 COPY . .
 
+ENV PIP_NO_CACHE_DIR=1 \
+    SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+    
 RUN  pip3 install psycopg2-binary && \
      pip3 install datadog-lambda && \
      pip3 install -r requirements.txt && \
-     pip3 install -r requirements.dev.txt
+     pip3 install -r requirements.dev.txt && \
+     pip3 install "scikit-learn==1.3.2"
 
 FROM public.ecr.aws/lambda/python:3.8
 RUN yum -y install openldap
