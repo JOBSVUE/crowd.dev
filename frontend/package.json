@@ -21,7 +21,7 @@
     "axios": "^0.22.0",
     "chart.js": "^3.7.0",
     "chartjs-adapter-moment": "^1.0.0",
-    "chartkick": "mariobalca/chartkick.js.git",
+    "chartkick": "^5",
     "core-js": "3.24.1",
     "element-plus": "^2.2.15",
     "emoji-toolkit": "^6.6.0",
