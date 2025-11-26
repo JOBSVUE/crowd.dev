@@ -1,6 +1,24 @@
 # syntax = docker/dockerfile:experimental
 FROM node:14.20
+
+# Set workdir
 WORKDIR /usr/crowd/frontend
 
-COPY . .
+# 1) Make npm compatible with lockfileVersion 2 (your logs show v2)
+#    Node 14 ships npm v6; upgrade npm only (not node).
+RUN npm i -g npm@7
+
+# 2) Force HTTPS for any GitHub dependency so SSH is never used
+#    Covers "git@github.com:", "ssh://git@github.com/", and legacy "git://"
+RUN git config --global url."https://github.com/".insteadOf git@github.com: \
+ && git config --global url."https://github.com/".insteadOf ssh://git@github.com/ \
+ && git config --global url."https://".insteadOf git://
+
+# 3) Copy manifests first for better caching and install deps
+COPY package.json package-lock.json* ./
+# Optional hardening to keep logs cleaner in CI images
+ENV NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false
 RUN npm install
+
+# 4) Copy the rest
+COPY . .
