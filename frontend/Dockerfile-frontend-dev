@@ -1,13 +1,15 @@
 # syntax = docker/dockerfile:experimental
 FROM node:14.20
-
 WORKDIR /usr/crowd/frontend
 
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
+# switch buster repos to archive to avoid 404s
+RUN sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g' /etc/apt/sources.list \
+ && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && printf 'Acquire::Check-Valid-Until "0";\n' > /etc/apt/apt.conf.d/99no-check-valid-until \
+ && apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
  && git config --global url."https://github.com/".insteadOf git@github.com: \
- && git config --global url."https://".insteadOf git:// \
+ && git config --global url."https://".InsteadOf git:// \
  && rm -rf /var/lib/apt/lists/*
 
 COPY . .
-
 RUN npm install
