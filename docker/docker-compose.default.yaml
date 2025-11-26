@@ -5,8 +5,8 @@ services:
   cubejs:
     image: cubejs/cube
     ports:
-      - "4000:4000"
-      - "3000:3000"
+      - "4700:4000"
+      - "3700:3000"
     volumes:
       - '../backend/src/cubejs:/cube/conf'
     environment:
@@ -27,9 +27,9 @@ services:
       - ../nginx/templates:/etc/nginx/templates
       - ../nginx/ssl:/etc/nginx/ssl
     ports:
-      - "443:443"
-      - "8080:8080"
-      - "8081:8081"
+      - "4943:443"
+      - "8430:8080"
+      - "8431:8081"
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=443
@@ -44,8 +44,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=example
       - POSTGRES_DB=crowd-web
-    ports:
-      - 5432:5432
     volumes:
       - pgdata-dev:/var/lib/postgresql/data
 
