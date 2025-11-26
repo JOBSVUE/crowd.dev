@@ -24,8 +24,8 @@ services:
   nginx:
     image: nginx
     volumes:
-      - ../nginx/templates:/etc/nginx/templates
-      - ../nginx/ssl:/etc/nginx/ssl
+      - '../nginx/templates:/etc/nginx/templates'
+      - '../nginx/ssl:/etc/nginx/ssl'
     ports:
       - "4943:443"
       - "8430:8080"
@@ -49,24 +49,24 @@ services:
 
   crowd-frontend:
     build:
-      context: ../frontend
+      context: ./frontend
       dockerfile: Dockerfile-frontend-dev
     image: crowddotdev/frontend:${CROWD_VERSION}-dev
     env_file:
-      - ../frontend/.env
+      - ./frontend/.env
     command: npm start
     environment:
       - DOCKER_BUILDKIT=1
 
   crowd-backend:
     build:
-      context: ../backend
+      context: ./backend
       dockerfile: Dockerfile-backend-dev
     image: crowddotdev/backend:${CROWD_VERSION}-dev
     dns: 1.1.1.1
     user: 1000:1000
     env_file:
-      - ../backend/.env
+      - ./backend/.env
     command: >
         sh -c "bash util/initialize-tables.sh && 
                npm start"
@@ -77,7 +77,7 @@ services:
 
   crowd-conversations:
     build:
-      context: ../premium/conversations
+      context: ./premium/conversations
       dockerfile: Dockerfile-conversations
     image: crowddotdev/conversations:${CROWD_VERSION}-dev
     ports:
@@ -141,7 +141,7 @@ services:
                LAMBDA_MOUNT_CWD=$${PROJECT_ROOT}/backend/src/serverless/integrations npx serverless deploy --stage local &&
                cd /usr/crowd/backend && npm run start:integrations"
 
-    env_file: ../backend/.env
+    env_file: ./backend/.env
 
   sls-deployer-nodejs-microservices:
     image: crowddotdev/backend:${CROWD_VERSION}-dev
@@ -151,7 +151,7 @@ services:
         sh -c "cd src/serverless/microservices/nodejs && 
                LAMBDA_MOUNT_CWD=$${PROJECT_ROOT}/backend/src/serverless/microservices/nodejs npx serverless deploy --stage local &&
                cd /usr/crowd/backend && npm run start:nodeMicroservices"
-    env_file: ../backend/.env
+    env_file: ./backend/.env
 
   sls-deployer-dbOperations:
     image: crowddotdev/backend:${CROWD_VERSION}-dev
@@ -162,7 +162,7 @@ services:
                LAMBDA_MOUNT_CWD=$${PROJECT_ROOT}/backend/src/serverless/dbOperations npx serverless deploy --stage local &&
                cd /usr/crowd/backend && npm run start:dbOperations"
                
-    env_file: ../backend/.env
+    env_file: ./backend/.env
 
   sls-deployer-python-microservices:
     image: crowddotdev/backend:${CROWD_VERSION}-dev
@@ -174,12 +174,12 @@ services:
                npx serverless deploy --stage local &&
                tail -f /dev/null"
                
-    env_file: ../backend/.env
+    env_file: ./backend/.env
 
   sls-python-lambda-packages:
     image: crowddotdev/lambda-py-packages:${CROWD_VERSION}-dev
     build:
-      context: ../backend/src/serverless/microservices/python
+      context: ./backend/src/serverless/microservices/python
       dockerfile: Dockerfile-lambda-lambci
     volumes:
       - py-dist-packages:/var/lang/lib/python3.8/site-packages
