@@ -1,5 +1,13 @@
 # syntax = docker/dockerfile:experimental
 FROM node:14.20
+
 WORKDIR /usr/crowd/frontend
+
 COPY . .
+
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
+ && git config --global url."https://github.com/".insteadOf git@github.com: \
+ && git config --global url."https://".insteadOf git:// \
+ && rm -rf /var/lib/apt/lists/*
+
 RUN npm install
